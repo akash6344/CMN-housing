@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CMNHousing · Builder Portal</title>
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/pages.css" />
+  </head>
+  <body>
+    <div class="overlay" id="overlay"></div>
+    <div class="app">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand" id="brand"></div>
+        <nav class="nav" id="nav-main"></nav>
+        <div class="sidebar-foot">
+          <nav id="nav-foot"></nav>
+          <div class="org-card" id="org"></div>
+        </div>
+      </aside>
+
+      <div class="main">
+        <header class="topbar">
+          <button class="menu-toggle" id="menu-toggle" aria-label="Open menu">
+            <span id="menu-icon"></span>
+          </button>
+          <div class="topbar-title">
+            <h1 id="page-title">Dashboard Overview</h1>
+            <p id="page-sub">Welcome back, Skyline Builders</p>
+          </div>
+          <div class="topbar-actions">
+            <label class="search">
+              <span id="search-icon"></span>
+              <input id="global-search" type="search" placeholder="Search projects, leads..." />
+            </label>
+            <button class="btn btn-primary" id="add-project">
+              <span id="add-icon"></span> Add Project
+            </button>
+            <button class="icon-btn" id="open-bell" aria-label="Notifications">
+              <span id="bell-icon"></span>
+              <span class="badge-dot"></span>
+            </button>
+          </div>
+        </header>
+        <main class="page" id="page"></main>
+      </div>
+    </div>
+
+    <div class="modal-backdrop" id="modal"></div>
+    <div class="toast" id="toast" role="status"></div>
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>

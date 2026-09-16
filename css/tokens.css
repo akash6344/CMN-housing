@@ -1,0 +1,50 @@
+:root {
+  /* Brand — provided */
+  --navy: #131d34;
+  --navy-mid: #1a2744;
+  --navy-hover: #243354;
+  --teal: #30b5a6;
+  --teal-dark: #2a9d90;
+  --page: #f6f7f9;
+
+  /* Derived until remaining codes arrive */
+  --white: #ffffff;
+  --text: #1a2438;
+  --text-secondary: #5b6578;
+  --text-muted: #8a94a6;
+  --border: #e6eaf0;
+  --border-strong: #d5dbe6;
+
+  --success: #22c55e;
+  --success-bg: #ecfdf3;
+  --danger: #ef4444;
+  --danger-bg: #fef2f2;
+  --warning: #f59e0b;
+  --warning-bg: #fffbeb;
+  --info: #3b82f6;
+  --info-bg: #eff6ff;
+  --orange: #f97316;
+  --orange-bg: #fff7ed;
+  --pink: #e11d48;
+  --pink-bg: #fff1f2;
+
+  --teal-soft: #e7f7f5;
+  --teal-softer: #f3fbfa;
+  --mint: #d1fae5;
+  --lavender-bg: #eef2ff;
+  --sky-bg: #e0f2fe;
+  --peach-bg: #ffedd5;
+  --banner-bg: #fff8e8;
+  --banner-border: #fde68a;
+
+  --sidebar-w: 248px;
+  --sidebar-collapsed: 76px;
+  --header-h: 76px;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-xs: 8px;
+  --shadow: 0 1px 2px rgba(19, 29, 52, 0.04), 0 8px 24px rgba(19, 29, 52, 0.04);
+  --shadow-lg: 0 16px 40px rgba(19, 29, 52, 0.12);
+  --font: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  --ease: 0.2s ease;
+}
