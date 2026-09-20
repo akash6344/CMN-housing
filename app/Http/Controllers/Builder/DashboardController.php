@@ -19,9 +19,31 @@ class DashboardController extends Controller
         ]));
     }
 
+    public function projects(): View
+    {
+        $data = DemoDashboardData::projects();
+
+        return view('builder.projects', array_merge($data, [
+            'pageTitle' => 'Projects & Inventory',
+            'pageSub' => 'Manage your real estate projects',
+            'active' => 'projects',
+        ]));
+    }
+
+    public function leads(): View
+    {
+        $data = DemoDashboardData::leadsPage();
+
+        return view('builder.leads', array_merge($data, [
+            'pageTitle' => 'Lead Management',
+            'pageSub' => 'Track and manage your property inquiries',
+            'active' => 'leads',
+        ]));
+    }
+
     public function comingSoon(string $page): View
     {
-        $data = DemoDashboardData::all();
+        $data = DemoDashboardData::shell();
 
         $labels = collect($data['navItems'])
             ->concat($data['footItems'])

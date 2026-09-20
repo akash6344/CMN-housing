@@ -63,9 +63,25 @@ document.addEventListener('click', (e) => {
         }
     }
 
-    if (e.target.closest('#add-project')) openProjectModal();
+    if (e.target.closest('#add-project') || e.target.closest('#add-project-page')) openProjectModal();
     if (e.target.closest('#menu-toggle')) document.body.classList.toggle('sidebar-open');
     if (e.target.id === 'overlay') closeSidebar();
+
+    const filterTab = e.target.closest('[data-filter-tab]');
+    if (filterTab) {
+        const group = filterTab.closest('[data-filter-group]');
+        group.querySelectorAll('[data-filter-tab]').forEach((tab) => tab.classList.remove('is-active'));
+        filterTab.classList.add('is-active');
+    }
+
+    const viewBtn = e.target.closest('[data-view]');
+    if (viewBtn) {
+        const toggle = viewBtn.closest('[data-view-toggle]');
+        toggle.querySelectorAll('[data-view]').forEach((btn) => btn.classList.remove('is-active'));
+        viewBtn.classList.add('is-active');
+        const grid = document.querySelector('[data-project-grid]');
+        if (grid) grid.classList.toggle('is-list', viewBtn.dataset.view === 'list');
+    }
 });
 
 const search = document.getElementById('global-search');

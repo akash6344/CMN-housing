@@ -8,7 +8,7 @@ namespace App\Support;
  */
 class DemoDashboardData
 {
-    public static function all(): array
+    public static function shell(): array
     {
         return [
             'builder' => [
@@ -30,6 +30,12 @@ class DemoDashboardData
                 ['id' => 'notifications', 'label' => 'Notifications', 'icon' => 'bell', 'route' => 'builder.notifications'],
                 ['id' => 'settings', 'label' => 'Settings', 'icon' => 'settings', 'route' => 'builder.settings'],
             ],
+        ];
+    }
+
+    public static function all(): array
+    {
+        return array_merge(self::shell(), [
             'stats' => [
                 ['label' => 'Active Projects', 'value' => '8', 'trend' => '+12% vs last month', 'dir' => 'up', 'icon' => 'building', 'tone' => 'mint'],
                 ['label' => 'Total Units Listed', 'value' => '342', 'trend' => '+8% vs last month', 'dir' => 'up', 'icon' => 'home', 'tone' => 'sky'],
@@ -117,6 +123,195 @@ class DemoDashboardData
                 'title' => '2 projects pending approval',
                 'text' => 'Urban Edge Phase 2 and Riverside Gardens are awaiting admin review',
             ],
-        ];
+        ]);
+    }
+
+    public static function projects(): array
+    {
+        return array_merge(self::shell(), [
+            'projectFilters' => ['All', 'Active', 'Pending', 'Completed'],
+            'projects' => [
+                [
+                    'name' => 'Sky Heights',
+                    'location' => 'Andheri West, Mumbai',
+                    'status' => 'Active',
+                    'statusClass' => 'chip-live',
+                    'totalUnits' => 120,
+                    'sold' => 89,
+                    'available' => 31,
+                    'progress' => 74,
+                    'leads' => 45,
+                    'rera' => 'P51900000001',
+                ],
+                [
+                    'name' => 'Green Valley',
+                    'location' => 'Whitefield, Bangalore',
+                    'status' => 'Active',
+                    'statusClass' => 'chip-live',
+                    'totalUnits' => 85,
+                    'sold' => 52,
+                    'available' => 33,
+                    'progress' => 61,
+                    'leads' => 32,
+                    'rera' => 'P52100000456',
+                ],
+                [
+                    'name' => 'Urban Edge',
+                    'location' => 'Hinjewadi, Pune',
+                    'status' => 'Pending Approval',
+                    'statusClass' => 'chip-pending',
+                    'totalUnits' => 200,
+                    'sold' => 0,
+                    'available' => 200,
+                    'progress' => 0,
+                    'leads' => 18,
+                    'rera' => 'Pending',
+                ],
+                [
+                    'name' => 'Palm Residences',
+                    'location' => 'Bandra East, Mumbai',
+                    'status' => 'Active',
+                    'statusClass' => 'chip-live',
+                    'totalUnits' => 60,
+                    'sold' => 48,
+                    'available' => 12,
+                    'progress' => 80,
+                    'leads' => 28,
+                    'rera' => 'P51900000789',
+                ],
+                [
+                    'name' => 'Lake View Towers',
+                    'location' => 'Powai, Mumbai',
+                    'status' => 'Completed',
+                    'statusClass' => 'chip-completed',
+                    'totalUnits' => 150,
+                    'sold' => 150,
+                    'available' => 0,
+                    'progress' => 100,
+                    'leads' => 0,
+                    'rera' => 'P51900000234',
+                ],
+                [
+                    'name' => 'Metro Heights',
+                    'location' => 'Koramangala, Bangalore',
+                    'status' => 'Pending Approval',
+                    'statusClass' => 'chip-pending',
+                    'totalUnits' => 95,
+                    'sold' => 0,
+                    'available' => 95,
+                    'progress' => 0,
+                    'leads' => 12,
+                    'rera' => 'Pending',
+                ],
+            ],
+        ]);
+    }
+
+    public static function leadsPage(): array
+    {
+        return array_merge(self::shell(), [
+            'leadMetrics' => [
+                ['label' => 'Total Leads', 'value' => '6'],
+                ['label' => 'New', 'value' => '2'],
+                ['label' => 'Contacted', 'value' => '1'],
+                ['label' => 'Site Visits', 'value' => '1'],
+                ['label' => 'Negotiating', 'value' => '1'],
+                ['label' => 'Closed', 'value' => '1'],
+            ],
+            'leadFilters' => ['All', 'New', 'Contacted', 'Site Visit', 'Closed'],
+            'leadProjects' => ['All Projects', 'Sky Heights', 'Green Valley', 'Urban Edge'],
+            'managementLeads' => [
+                [
+                    'name' => 'Rahul Sharma',
+                    'initials' => 'RS',
+                    'color' => '#dbeafe',
+                    'ink' => '#2563eb',
+                    'email' => 'rahul.s****@gmail.com',
+                    'phone' => '+91 98***45678',
+                    'project' => 'Sky Heights',
+                    'unit' => '3BHK - A-1204',
+                    'status' => 'New',
+                    'statusClass' => 'chip-new',
+                    'source' => 'Website',
+                    'date' => 'Jan 17, 2026',
+                    'showActions' => true,
+                ],
+                [
+                    'name' => 'Priya Patel',
+                    'initials' => 'PP',
+                    'color' => '#dcfce7',
+                    'ink' => '#16a34a',
+                    'email' => 'priya.p****@yahoo.com',
+                    'phone' => '+91 87***12345',
+                    'project' => 'Green Valley',
+                    'unit' => '2BHK - B-505',
+                    'status' => 'Contacted',
+                    'statusClass' => 'chip-contacted',
+                    'source' => 'Facebook Ad',
+                    'date' => 'Jan 17, 2026',
+                    'showActions' => false,
+                ],
+                [
+                    'name' => 'Amit Kumar',
+                    'initials' => 'AK',
+                    'color' => '#ffedd5',
+                    'ink' => '#ea580c',
+                    'email' => 'amit.k****@gmail.com',
+                    'phone' => '+91 99***67890',
+                    'project' => 'Urban Edge',
+                    'unit' => '4BHK - C-1801',
+                    'status' => 'Site Visit',
+                    'statusClass' => 'chip-visit',
+                    'source' => 'Google Ad',
+                    'date' => 'Jan 16, 2026',
+                    'showActions' => false,
+                ],
+                [
+                    'name' => 'Sneha Reddy',
+                    'initials' => 'SR',
+                    'color' => '#ccfbf1',
+                    'ink' => '#0f766e',
+                    'email' => 'sneha.r****@gmail.com',
+                    'phone' => '+91 90***33421',
+                    'project' => 'Sky Heights',
+                    'unit' => '2BHK - B-302',
+                    'status' => 'Negotiating',
+                    'statusClass' => 'chip-negotiating',
+                    'source' => 'Referral',
+                    'date' => 'Jan 15, 2026',
+                    'showActions' => false,
+                ],
+                [
+                    'name' => 'Vikram Singh',
+                    'initials' => 'VS',
+                    'color' => '#dcfce7',
+                    'ink' => '#15803d',
+                    'email' => 'vikram.s****@outlook.com',
+                    'phone' => '+91 88***11223',
+                    'project' => 'Green Valley',
+                    'unit' => '3BHK - A-701',
+                    'status' => 'Closed',
+                    'statusClass' => 'chip-closed',
+                    'source' => 'Website',
+                    'date' => 'Jan 14, 2026',
+                    'showActions' => false,
+                ],
+                [
+                    'name' => 'Anjali Mehta',
+                    'initials' => 'AM',
+                    'color' => '#e0e7ff',
+                    'ink' => '#4338ca',
+                    'email' => 'anjali.m****@gmail.com',
+                    'phone' => '+91 97***55667',
+                    'project' => 'Urban Edge',
+                    'unit' => '3BHK - D-1502',
+                    'status' => 'New',
+                    'statusClass' => 'chip-new',
+                    'source' => 'Instagram',
+                    'date' => 'Jan 17, 2026',
+                    'showActions' => false,
+                ],
+            ],
+        ]);
     }
 }

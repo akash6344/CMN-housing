@@ -30,7 +30,7 @@
                     </button>
                     <a class="icon-btn" href="{{ route('builder.notifications') }}" aria-label="Notifications">
                         {!! \App\Support\Icon::svg('bell') !!}
-                        <span class="badge-dot"></span>
+                        <span class="badge-count">3</span>
                     </a>
                 </div>
             </header>

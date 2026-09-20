@@ -29,6 +29,14 @@ class Icon
             'alert' => '<circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/>',
             'menu' => '<path d="M4 7h16M4 12h16M4 17h16"/>',
             'switch' => '<path d="M8 7H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-3"/><path d="M16 3h5v5"/><path d="M10 14 21 3"/>',
+            'filter' => '<path d="M4 5h16l-6 7v5l-4 2v-7z"/>',
+            'grid' => '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+            'list' => '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+            'more' => '<circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/>',
+            'download' => '<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>',
+            'calendar' => '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/>',
+            'trendUp' => '<path d="M3 17l6-6 4 4 7-7"/><path d="M14 8h6v6"/>',
+            'user' => '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="3"/>',
         ];
 
         $inner = $paths[$name] ?? '';
