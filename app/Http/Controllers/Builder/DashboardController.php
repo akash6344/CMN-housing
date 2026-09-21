@@ -41,6 +41,28 @@ class DashboardController extends Controller
         ]));
     }
 
+    public function settings(): View
+    {
+        $data = DemoDashboardData::settings();
+
+        return view('builder.settings', array_merge($data, [
+            'pageTitle' => 'Settings',
+            'pageSub' => 'Manage your account and preferences',
+            'active' => 'settings',
+        ]));
+    }
+
+    public function notifications(): View
+    {
+        $data = DemoDashboardData::notificationsPage();
+
+        return view('builder.notifications', array_merge($data, [
+            'pageTitle' => 'Notifications',
+            'pageSub' => $data['unreadCount'].' unread notifications',
+            'active' => 'notifications',
+        ]));
+    }
+
     public function comingSoon(string $page): View
     {
         $data = DemoDashboardData::shell();

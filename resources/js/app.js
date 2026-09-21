@@ -82,6 +82,55 @@ document.addEventListener('click', (e) => {
         const grid = document.querySelector('[data-project-grid]');
         if (grid) grid.classList.toggle('is-list', viewBtn.dataset.view === 'list');
     }
+
+    const settingsTab = e.target.closest('[data-settings-tab]');
+    if (settingsTab) {
+        const tabs = settingsTab.closest('[data-settings-tabs]');
+        tabs.querySelectorAll('[data-settings-tab]').forEach((tab) => tab.classList.remove('is-active'));
+        settingsTab.classList.add('is-active');
+        const panelId = settingsTab.dataset.settingsTab;
+        document.querySelectorAll('[data-settings-panel]').forEach((panel) => {
+            const match = panel.dataset.settingsPanel === panelId;
+            panel.classList.toggle('is-active', match);
+            panel.hidden = !match;
+        });
+    }
+
+    const toggleBtn = e.target.closest('[data-toggle]');
+    if (toggleBtn) {
+        toggleBtn.classList.toggle('is-on');
+        const on = toggleBtn.classList.contains('is-on');
+        toggleBtn.setAttribute('aria-checked', on ? 'true' : 'false');
+        toast(on ? 'Preference enabled' : 'Preference disabled');
+    }
+
+    if (e.target.closest('[data-mark-all-read]')) {
+        document.querySelectorAll('[data-notification]').forEach((card) => {
+            card.classList.remove('is-unread');
+            card.dataset.unread = '0';
+        });
+        toast('All notifications marked as read');
+    }
+
+    const removeBtn = e.target.closest('[data-remove-notification]');
+    if (removeBtn) {
+        const card = removeBtn.closest('[data-notification]');
+        if (card) card.remove();
+    }
+
+    const notifyFilter = e.target.closest('[data-notify-filter]');
+    if (notifyFilter) {
+        const filter = notifyFilter.dataset.notifyFilter;
+        document.querySelectorAll('[data-notification]').forEach((card) => {
+            const category = card.dataset.category;
+            const unread = card.dataset.unread === '1';
+            let show = true;
+            if (filter === 'unread') show = unread;
+            else if (filter === 'leads') show = category === 'leads';
+            else if (filter === 'bargains') show = category === 'bargains';
+            card.hidden = !show;
+        });
+    }
 });
 
 const search = document.getElementById('global-search');

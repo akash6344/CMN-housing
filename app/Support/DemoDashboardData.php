@@ -314,4 +314,135 @@ class DemoDashboardData
             ],
         ]);
     }
+
+    public static function settings(): array
+    {
+        return array_merge(self::shell(), [
+            'settingsTabs' => [
+                ['id' => 'profile', 'label' => 'Profile', 'icon' => 'user'],
+                ['id' => 'company', 'label' => 'Company', 'icon' => 'building'],
+                ['id' => 'notifications', 'label' => 'Notifications', 'icon' => 'bell'],
+                ['id' => 'security', 'label' => 'Security', 'icon' => 'shield'],
+            ],
+            'profile' => [
+                'initials' => 'SK',
+                'firstName' => 'Suresh',
+                'lastName' => 'Kumar',
+                'email' => 'suresh@skylinebuilders.com',
+                'phone' => '+91 98765 43210',
+            ],
+            'company' => [
+                'name' => 'Skyline Builders Pvt. Ltd.',
+                'gst' => '27AAAAA0000A1Z5',
+                'pan' => 'AAAAA0000A',
+                'address' => '123, Business Park, Andheri East, Mumbai - 400069',
+                'website' => 'www.skylinebuilders.com',
+                'year' => '2005',
+            ],
+            'notificationPrefs' => [
+                ['label' => 'New Lead Alerts', 'desc' => 'Get notified when you receive a new lead inquiry', 'on' => true],
+                ['label' => 'Bargain Responses', 'desc' => 'Notifications for buyer counter-offers and responses', 'on' => true],
+                ['label' => 'Approval Updates', 'desc' => 'Unit and project approval status changes', 'on' => true],
+                ['label' => 'Ad Campaign Alerts', 'desc' => 'Campaign expiry and performance notifications', 'on' => true],
+                ['label' => 'Document Reminders', 'desc' => 'Expiry reminders for RERA and other documents', 'on' => true],
+                ['label' => 'Email Notifications', 'desc' => 'Receive notifications via email', 'on' => true],
+                ['label' => 'SMS Notifications', 'desc' => 'Receive important alerts via SMS', 'on' => false],
+            ],
+        ]);
+    }
+
+    public static function notificationsPage(): array
+    {
+        return array_merge(self::shell(), [
+            'notificationFilters' => [
+                ['label' => 'All', 'badge' => null],
+                ['label' => 'Unread', 'badge' => 3],
+                ['label' => 'Leads', 'badge' => null],
+                ['label' => 'Bargains', 'badge' => null],
+            ],
+            'unreadCount' => 3,
+            'notifications' => [
+                [
+                    'title' => 'New lead received',
+                    'desc' => 'Rahul Sharma inquired about Sky Heights 3BHK (A-1204).',
+                    'time' => '2 minutes ago',
+                    'icon' => 'phone',
+                    'tone' => 'teal',
+                    'category' => 'leads',
+                    'unread' => true,
+                    'showActions' => false,
+                ],
+                [
+                    'title' => 'Bargain response pending',
+                    'desc' => 'Buyer countered ₹1.55 Cr for Sky Heights A-1204. Expires in 4 hours.',
+                    'time' => '1 hour ago',
+                    'icon' => 'message',
+                    'tone' => 'teal',
+                    'category' => 'bargains',
+                    'unread' => true,
+                    'showActions' => true,
+                ],
+                [
+                    'title' => 'Unit approved',
+                    'desc' => 'Urban Edge C-1801 has been approved by admin and is now live.',
+                    'time' => '3 hours ago',
+                    'icon' => 'file',
+                    'tone' => 'green',
+                    'category' => 'all',
+                    'unread' => true,
+                    'showActions' => false,
+                ],
+                [
+                    'title' => 'Ad campaign expiring',
+                    'desc' => 'Sky Heights Launch campaign expires in 2 days. Renew to continue visibility.',
+                    'time' => '5 hours ago',
+                    'icon' => 'megaphone',
+                    'tone' => 'orange',
+                    'category' => 'all',
+                    'unread' => false,
+                    'showActions' => false,
+                ],
+                [
+                    'title' => 'Document expiry reminder',
+                    'desc' => 'Fire NOC for Green Valley expires next month. Please renew.',
+                    'time' => 'Yesterday',
+                    'icon' => 'alert',
+                    'tone' => 'red',
+                    'category' => 'all',
+                    'unread' => false,
+                    'showActions' => false,
+                ],
+                [
+                    'title' => 'Deal closed successfully',
+                    'desc' => 'Sale agreement for Sky Heights B-302 has been signed by the buyer.',
+                    'time' => 'Yesterday',
+                    'icon' => 'check',
+                    'tone' => 'green',
+                    'category' => 'bargains',
+                    'unread' => false,
+                    'showActions' => false,
+                ],
+                [
+                    'title' => 'Site visit scheduled',
+                    'desc' => 'Amit Kumar has confirmed site visit for Urban Edge on Jan 18 at 11 AM.',
+                    'time' => '2 days ago',
+                    'icon' => 'calendar',
+                    'tone' => 'sky',
+                    'category' => 'leads',
+                    'unread' => false,
+                    'showActions' => false,
+                ],
+                [
+                    'title' => 'Project pending approval',
+                    'desc' => 'Riverside Gardens is awaiting admin approval. Expected review in 24 hours.',
+                    'time' => '2 days ago',
+                    'icon' => 'building',
+                    'tone' => 'navy',
+                    'category' => 'all',
+                    'unread' => false,
+                    'showActions' => false,
+                ],
+            ],
+        ]);
+    }
 }
