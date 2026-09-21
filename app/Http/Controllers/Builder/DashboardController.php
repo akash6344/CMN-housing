@@ -41,6 +41,17 @@ class DashboardController extends Controller
         ]));
     }
 
+    public function listings(): View
+    {
+        $data = DemoDashboardData::listings();
+
+        return view('builder.listings', array_merge($data, [
+            'pageTitle' => 'Property Listings',
+            'pageSub' => 'Manage your unit inventory',
+            'active' => 'listings',
+        ]));
+    }
+
     public function settings(): View
     {
         $data = DemoDashboardData::settings();

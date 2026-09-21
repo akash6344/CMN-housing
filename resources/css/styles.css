@@ -613,6 +613,26 @@ body.sidebar-open .overlay {
   color: #16a34a;
 }
 
+.chip-available {
+  background: var(--success-bg);
+  color: #15803d;
+}
+
+.chip-hold {
+  background: var(--orange-bg);
+  color: var(--orange);
+}
+
+.chip-sold-gray {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.chip-approval {
+  background: var(--info-bg);
+  color: var(--info);
+}
+
 .chip-pending {
   background: var(--warning-bg);
   color: #d97706;
@@ -2001,6 +2021,30 @@ body.sidebar-open .overlay {
 
   .security-2fa .btn {
     margin-left: 0;
+    width: 100%;
+  }
+}
+
+/* Listings */
+.listing-unit-id,
+.listing-price {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.listing-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+.listings-table td {
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .listings-toolbar .toolbar-cluster {
     width: 100%;
   }
 }

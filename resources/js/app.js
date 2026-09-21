@@ -131,7 +131,31 @@ document.addEventListener('click', (e) => {
             card.hidden = !show;
         });
     }
+
+    if (e.target.closest('[data-listing-filter]')) {
+        filterListings();
+    }
 });
+
+function filterListings() {
+    const active = document.querySelector('[data-filter-group="listings"] [data-listing-filter].is-active');
+    const statusFilter = active ? active.dataset.listingFilter : 'all';
+    const projectSelect = document.querySelector('[data-listing-project]');
+    const projectFilter = projectSelect ? projectSelect.value : 'All Projects';
+
+    document.querySelectorAll('[data-listing-row]').forEach((row) => {
+        const status = row.dataset.status || '';
+        const project = row.dataset.project || '';
+        const statusOk = statusFilter === 'all' || status === statusFilter;
+        const projectOk = projectFilter === 'All Projects' || project === projectFilter;
+        row.hidden = !(statusOk && projectOk);
+    });
+}
+
+const listingProject = document.querySelector('[data-listing-project]');
+if (listingProject) {
+    listingProject.addEventListener('change', filterListings);
+}
 
 const search = document.getElementById('global-search');
 if (search) {
