@@ -2048,3 +2048,382 @@ body.sidebar-open .overlay {
     width: 100%;
   }
 }
+
+/* Ads & Analytics */
+.icon-lavender {
+  background: var(--lavender-bg);
+  color: #6366f1;
+}
+
+.ad-metric-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 18px;
+}
+
+.ad-metric-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  min-height: auto;
+}
+
+.ad-metric-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.ad-metric-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.ad-metric-card .metric-value {
+  margin-top: 4px;
+  font-size: 24px;
+}
+
+.campaigns-toolbar,
+.analytics-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.campaigns-toolbar .status-tabs,
+.analytics-toolbar .status-tabs {
+  margin-left: 0;
+}
+
+.campaigns-toolbar .btn,
+.analytics-toolbar .btn {
+  margin-left: auto;
+}
+
+.campaign-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.campaign-card {
+  padding: 18px;
+}
+
+.campaign-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.campaign-name {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.campaign-meta {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.campaign-card-tools {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.campaign-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 16px;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+
+.campaign-metrics span {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.campaign-metrics strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 16px;
+  color: var(--text);
+}
+
+.campaign-budget {
+  margin-top: 14px;
+}
+
+.campaign-budget-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.campaign-dates {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.campaign-dates svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.analytics-stat-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 16px;
+}
+
+.analytics-grid-top {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.analytics-grid-bottom {
+  display: grid;
+  grid-template-columns: 1.2fr 0.9fr 0.9fr;
+  gap: 16px;
+}
+
+.chart-card {
+  padding: 18px;
+}
+
+.chart-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.chart-svg-wrap,
+.chart-bars-wrap,
+.chart-hbar-wrap,
+.chart-donut-wrap {
+  width: 100%;
+}
+
+.chart-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.chart-grid {
+  stroke: #eef2f6;
+  stroke-width: 1;
+}
+
+.chart-axis {
+  fill: var(--text-muted);
+  font-size: 10px;
+}
+
+.chart-area-fill {
+  fill: rgba(48, 181, 166, 0.18);
+}
+
+.chart-area-line {
+  stroke: var(--teal);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.chart-bars-wrap {
+  display: flex;
+  gap: 8px;
+  min-height: 210px;
+}
+
+.chart-bars-y {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-muted);
+  padding-bottom: 22px;
+}
+
+.chart-bars {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  align-items: end;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 4px;
+}
+
+.chart-bar-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.chart-bar-cols {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 170px;
+  width: 100%;
+  justify-content: center;
+}
+
+.chart-bar {
+  width: 10px;
+  min-height: 4px;
+  border-radius: 4px 4px 0 0;
+}
+
+.chart-bar-label {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+.chart-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.chart-legend-item i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.chart-hbar-row {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.chart-hbar-label {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  text-align: right;
+}
+
+.chart-hbar-tracks {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.chart-hbar-track {
+  height: 10px;
+  border-radius: 999px;
+  background: #eef2f6;
+  overflow: hidden;
+}
+
+.chart-hbar-fill {
+  height: 100%;
+  border-radius: inherit;
+}
+
+.chart-hbar-x {
+  display: flex;
+  justify-content: space-between;
+  margin-left: 110px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.chart-donut-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chart-donut {
+  width: min(180px, 100%);
+  height: auto;
+}
+
+@media (max-width: 1180px) {
+  .analytics-grid-top,
+  .analytics-grid-bottom {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .analytics-grid-bottom .chart-card:first-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 900px) {
+  .ad-metric-grid,
+  .analytics-stat-grid,
+  .campaign-grid,
+  .analytics-grid-top,
+  .analytics-grid-bottom {
+    grid-template-columns: 1fr;
+  }
+
+  .campaigns-toolbar .btn,
+  .analytics-toolbar .btn {
+    margin-left: 0;
+  }
+
+  .chart-hbar-row {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-hbar-label {
+    text-align: left;
+  }
+
+  .chart-hbar-x {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .ad-metric-grid,
+  .analytics-stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

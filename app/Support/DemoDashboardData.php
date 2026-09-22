@@ -543,4 +543,121 @@ class DemoDashboardData
             ],
         ]);
     }
+
+    public static function ads(): array
+    {
+        return array_merge(self::shell(), [
+            'adMetrics' => [
+                ['label' => 'Total Impressions', 'value' => '49.0K', 'icon' => 'eye', 'tone' => 'sky'],
+                ['label' => 'Total Clicks', 'value' => '1,276', 'icon' => 'cursor', 'tone' => 'mint'],
+                ['label' => 'Avg. CTR', 'value' => '2.60%', 'icon' => 'trendUp', 'tone' => 'peach'],
+                ['label' => 'Total Spent', 'value' => '₹138.5K', 'icon' => 'calendar', 'tone' => 'lavender'],
+            ],
+            'campaignFilters' => ['All Campaigns', 'Active', 'Paused', 'Completed'],
+            'campaigns' => [
+                [
+                    'name' => 'Sky Heights Launch',
+                    'meta' => 'Sky Heights • Featured Listing',
+                    'status' => 'Active',
+                    'statusClass' => 'chip-available',
+                    'impressions' => '18.2K',
+                    'clicks' => '524',
+                    'ctr' => '2.88%',
+                    'spent' => '₹35.0K',
+                    'budget' => '₹50.0K',
+                    'progress' => 70,
+                    'start' => 'Jan 1, 2026',
+                    'end' => 'Jan 31, 2026',
+                ],
+                [
+                    'name' => 'Green Valley Promo',
+                    'meta' => 'Green Valley • Social Ads',
+                    'status' => 'Paused',
+                    'statusClass' => 'chip-hold',
+                    'impressions' => '9.4K',
+                    'clicks' => '210',
+                    'ctr' => '2.23%',
+                    'spent' => '₹18.5K',
+                    'budget' => '₹40.0K',
+                    'progress' => 46,
+                    'start' => 'Dec 15, 2025',
+                    'end' => 'Jan 15, 2026',
+                ],
+                [
+                    'name' => 'Urban Edge Boost',
+                    'meta' => 'Urban Edge • Search Ads',
+                    'status' => 'Active',
+                    'statusClass' => 'chip-available',
+                    'impressions' => '14.8K',
+                    'clicks' => '390',
+                    'ctr' => '2.64%',
+                    'spent' => '₹42.0K',
+                    'budget' => '₹60.0K',
+                    'progress' => 70,
+                    'start' => 'Jan 5, 2026',
+                    'end' => 'Feb 5, 2026',
+                ],
+                [
+                    'name' => 'Palm Residences Ad',
+                    'meta' => 'Palm Residences • Retargeting',
+                    'status' => 'Completed',
+                    'statusClass' => 'chip-sold-gray',
+                    'impressions' => '6.6K',
+                    'clicks' => '152',
+                    'ctr' => '2.30%',
+                    'spent' => '₹43.0K',
+                    'budget' => '₹43.0K',
+                    'progress' => 100,
+                    'start' => 'Nov 1, 2025',
+                    'end' => 'Nov 30, 2025',
+                ],
+            ],
+        ]);
+    }
+
+    public static function analytics(): array
+    {
+        return array_merge(self::shell(), [
+            'analyticsRanges' => ['7 Days', '30 Days', '90 Days', '1 Year'],
+            'analyticsStats' => [
+                ['label' => 'Total Leads', 'value' => '372', 'trend' => '+16.7%', 'dir' => 'up', 'icon' => 'users', 'tone' => 'mint'],
+                ['label' => 'Total Views', 'value' => '12.4K', 'trend' => '+24.3%', 'dir' => 'up', 'icon' => 'eye', 'tone' => 'sky'],
+                ['label' => 'Conversion Rate', 'value' => '28.4%', 'trend' => '-2.1%', 'dir' => 'down', 'icon' => 'percent', 'tone' => 'peach'],
+                ['label' => 'Revenue (Ads)', 'value' => '₹2.4L', 'trend' => '+8.5%', 'dir' => 'up', 'icon' => 'rupee', 'tone' => 'lime'],
+            ],
+            'leadTrend' => [
+                'labels' => ['Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan'],
+                'values' => [42, 50, 58, 70, 78, 88],
+                'max' => 100,
+            ],
+            'conversionFunnel' => [
+                'labels' => ['Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan'],
+                'series' => [
+                    ['key' => 'inquiries', 'color' => '#131d34', 'values' => [78, 82, 75, 88, 90, 92]],
+                    ['key' => 'siteVisits', 'color' => '#30b5a6', 'values' => [48, 52, 50, 58, 62, 65]],
+                    ['key' => 'closed', 'color' => '#22c55e', 'values' => [18, 22, 20, 28, 30, 34]],
+                ],
+                'max' => 100,
+            ],
+            'projectPerformance' => [
+                'labels' => ['Sky Heights', 'Green Valley', 'Urban Edge', 'Sunrise Apts'],
+                'series' => [
+                    ['key' => 'leads', 'color' => '#131d34', 'values' => [62, 48, 74, 36]],
+                    ['key' => 'conversion', 'color' => '#30b5a6', 'values' => [28, 22, 34, 18]],
+                ],
+                'max' => 80,
+            ],
+            'cityDemand' => [
+                ['label' => 'Mumbai', 'value' => 38, 'color' => '#30b5a6'],
+                ['label' => 'Bangalore', 'value' => 27, 'color' => '#131d34'],
+                ['label' => 'Pune', 'value' => 20, 'color' => '#f97316'],
+                ['label' => 'Delhi NCR', 'value' => 15, 'color' => '#22c55e'],
+            ],
+            'bargainRate' => [
+                ['label' => 'Accepted', 'value' => 52, 'color' => '#22c55e'],
+                ['label' => 'Rejected', 'value' => 28, 'color' => '#ef4444'],
+                ['label' => 'Pending', 'value' => 20, 'color' => '#f97316'],
+            ],
+        ]);
+    }
 }

@@ -135,6 +135,10 @@ document.addEventListener('click', (e) => {
     if (e.target.closest('[data-listing-filter]')) {
         filterListings();
     }
+
+    if (e.target.closest('[data-campaign-filter]')) {
+        filterCampaigns();
+    }
 });
 
 function filterListings() {
@@ -149,6 +153,16 @@ function filterListings() {
         const statusOk = statusFilter === 'all' || status === statusFilter;
         const projectOk = projectFilter === 'All Projects' || project === projectFilter;
         row.hidden = !(statusOk && projectOk);
+    });
+}
+
+function filterCampaigns() {
+    const active = document.querySelector('[data-filter-group="campaigns"] [data-campaign-filter].is-active');
+    const filter = active ? active.dataset.campaignFilter : 'all';
+
+    document.querySelectorAll('[data-campaign-card]').forEach((card) => {
+        const status = card.dataset.status || '';
+        card.hidden = !(filter === 'all' || status === filter);
     });
 }
 

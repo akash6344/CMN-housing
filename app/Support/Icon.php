@@ -45,6 +45,10 @@ class Icon
             'eye' => '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
             'edit' => '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
             'pause' => '<rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/>',
+            'cursor' => '<path d="M4 4l7 17 2.5-6.5L20 12z"/>',
+            'percent' => '<circle cx="7.5" cy="7.5" r="1.5"/><circle cx="16.5" cy="16.5" r="1.5"/><path d="M17 7 7 17"/>',
+            'rupee' => '<path d="M6 5h12M6 9h12M10 5c4 0 6 2 6 4s-2 4-6 4H9l7 6M9 13H6"/>',
+            'arrowRight' => '<path d="M5 12h14M13 6l6 6-6 6"/>',
         ];
 
         $inner = $paths[$name] ?? '';

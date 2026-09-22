@@ -74,6 +74,28 @@ class DashboardController extends Controller
         ]));
     }
 
+    public function ads(): View
+    {
+        $data = DemoDashboardData::ads();
+
+        return view('builder.ads', array_merge($data, [
+            'pageTitle' => 'Ads & Promotions',
+            'pageSub' => 'Manage your marketing campaigns',
+            'active' => 'ads',
+        ]));
+    }
+
+    public function analytics(): View
+    {
+        $data = DemoDashboardData::analytics();
+
+        return view('builder.analytics', array_merge($data, [
+            'pageTitle' => 'Analytics & Reports',
+            'pageSub' => 'Track your performance metrics',
+            'active' => 'analytics',
+        ]));
+    }
+
     public function comingSoon(string $page): View
     {
         $data = DemoDashboardData::shell();
