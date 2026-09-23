@@ -660,4 +660,98 @@ class DemoDashboardData
             ],
         ]);
     }
+
+    public static function documents(): array
+    {
+        return array_merge(self::shell(), [
+            'documentBanner' => [
+                'title' => '1 document pending verification',
+                'text' => 'Urban Edge RERA Certificate is awaiting admin approval.',
+            ],
+            'documentTabs' => [
+                ['id' => 'rera', 'label' => 'RERA Certificates'],
+                ['id' => 'approval', 'label' => 'Approval Letters'],
+                ['id' => 'agreements', 'label' => 'Agreements'],
+            ],
+            'documents' => [
+                [
+                    'title' => 'Sky Heights RERA Certificate',
+                    'project' => 'Sky Heights',
+                    'idLabel' => 'RERA ID',
+                    'idValue' => 'P51900000001',
+                    'status' => 'Verified',
+                    'statusClass' => 'chip-verified',
+                    'statusIcon' => 'checkSimple',
+                    'expires' => 'Dec 2027',
+                    'category' => 'rera',
+                ],
+                [
+                    'title' => 'Green Valley RERA Certificate',
+                    'project' => 'Green Valley',
+                    'idLabel' => 'RERA ID',
+                    'idValue' => 'P52100000456',
+                    'status' => 'Verified',
+                    'statusClass' => 'chip-verified',
+                    'statusIcon' => 'checkSimple',
+                    'expires' => 'Mar 2028',
+                    'category' => 'rera',
+                ],
+                [
+                    'title' => 'Urban Edge RERA Certificate',
+                    'project' => 'Urban Edge',
+                    'idLabel' => 'RERA ID',
+                    'idValue' => 'Pending',
+                    'status' => 'Pending',
+                    'statusClass' => 'chip-doc-pending',
+                    'statusIcon' => 'clock',
+                    'expires' => 'Pending',
+                    'category' => 'rera',
+                ],
+                [
+                    'title' => 'Sky Heights Approval Letter',
+                    'project' => 'Sky Heights',
+                    'idLabel' => 'Ref',
+                    'idValue' => 'APL-SH-2025-014',
+                    'status' => 'Verified',
+                    'statusClass' => 'chip-verified',
+                    'statusIcon' => 'checkSimple',
+                    'expires' => 'Jun 2028',
+                    'category' => 'approval',
+                ],
+                [
+                    'title' => 'Palm Residences Approval Letter',
+                    'project' => 'Palm Residences',
+                    'idLabel' => 'Ref',
+                    'idValue' => 'APL-PR-2025-009',
+                    'status' => 'Pending',
+                    'statusClass' => 'chip-doc-pending',
+                    'statusIcon' => 'clock',
+                    'expires' => 'Pending',
+                    'category' => 'approval',
+                ],
+                [
+                    'title' => 'Buyer Agreement Template',
+                    'project' => 'All Projects',
+                    'idLabel' => 'Doc',
+                    'idValue' => 'AGR-GEN-001',
+                    'status' => 'Verified',
+                    'statusClass' => 'chip-verified',
+                    'statusIcon' => 'checkSimple',
+                    'expires' => 'No expiry',
+                    'category' => 'agreements',
+                ],
+                [
+                    'title' => 'Sky Heights Sale Agreement',
+                    'project' => 'Sky Heights',
+                    'idLabel' => 'Doc',
+                    'idValue' => 'AGR-SH-A-1204',
+                    'status' => 'Verified',
+                    'statusClass' => 'chip-verified',
+                    'statusIcon' => 'checkSimple',
+                    'expires' => 'Jan 2027',
+                    'category' => 'agreements',
+                ],
+            ],
+        ]);
+    }
 }

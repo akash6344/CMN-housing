@@ -139,6 +139,10 @@ document.addEventListener('click', (e) => {
     if (e.target.closest('[data-campaign-filter]')) {
         filterCampaigns();
     }
+
+    if (e.target.closest('[data-document-filter]')) {
+        filterDocuments();
+    }
 });
 
 function filterListings() {
@@ -165,6 +169,17 @@ function filterCampaigns() {
         card.hidden = !(filter === 'all' || status === filter);
     });
 }
+
+function filterDocuments() {
+    const active = document.querySelector('[data-filter-group="documents"] [data-document-filter].is-active');
+    const filter = active ? active.dataset.documentFilter : 'rera';
+
+    document.querySelectorAll('[data-document-card]').forEach((card) => {
+        card.hidden = card.dataset.category !== filter;
+    });
+}
+
+filterDocuments();
 
 const listingProject = document.querySelector('[data-listing-project]');
 if (listingProject) {

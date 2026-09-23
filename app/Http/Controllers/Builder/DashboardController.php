@@ -96,6 +96,17 @@ class DashboardController extends Controller
         ]));
     }
 
+    public function documents(): View
+    {
+        $data = DemoDashboardData::documents();
+
+        return view('builder.documents', array_merge($data, [
+            'pageTitle' => 'Documents & Compliance',
+            'pageSub' => 'Manage project documentation',
+            'active' => 'documents',
+        ]));
+    }
+
     public function comingSoon(string $page): View
     {
         $data = DemoDashboardData::shell();
