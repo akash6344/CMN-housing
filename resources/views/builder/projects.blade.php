@@ -20,9 +20,9 @@
                 </button>
             </div>
 
-            <button type="button" class="btn btn-primary" id="add-project-page">
+            <a class="btn btn-primary" href="{{ route('builder.projects.create') }}">
                 {!! \App\Support\Icon::svg('plus') !!} Add Project
-            </button>
+            </a>
         </div>
     </div>
 

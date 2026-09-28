@@ -49,6 +49,16 @@ class Icon
             'percent' => '<circle cx="7.5" cy="7.5" r="1.5"/><circle cx="16.5" cy="16.5" r="1.5"/><path d="M17 7 7 17"/>',
             'rupee' => '<path d="M6 5h12M6 9h12M10 5c4 0 6 2 6 4s-2 4-6 4H9l7 6M9 13H6"/>',
             'arrowRight' => '<path d="M5 12h14M13 6l6 6-6 6"/>',
+            'arrowLeft' => '<path d="M19 12H5M11 18l-6-6 6-6"/>',
+            'upload' => '<path d="M12 16V6M8 9l4-4 4 4M4 18h16"/>',
+            'lightbulb' => '<path d="M9 18h6M10 21h4M8 14a5 5 0 1 1 8 0c-.8.9-1.2 1.6-1.4 2.5H9.4C9.2 15.6 8.8 14.9 8 14z"/>',
+            'save' => '<path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h8V4M8 20v-7h8v7"/>',
+            'image' => '<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="m21 15-4.5-4.5L7 20"/>',
+            'x' => '<path d="M6 6l12 12M18 6 6 18"/>',
+            'heart' => '<path d="M12 20s-7-4.5-9.5-8.5A5 5 0 0 1 12 5a5 5 0 0 1 9.5 6.5C19 15.5 12 20 12 20z"/>',
+            'share' => '<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.3 13.2 15.7 17M15.7 7 8.3 10.8"/>',
+            'play' => '<path d="M8 6.5v11l10-5.5z"/>',
+            'compare' => '<path d="M8 4v16M16 4v16M4 8h4M16 16h4"/>',
         ];
 
         $inner = $paths[$name] ?? '';

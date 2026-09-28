@@ -25,9 +25,9 @@
                         {!! \App\Support\Icon::svg('search') !!}
                         <input id="global-search" type="search" placeholder="Search projects, leads...">
                     </label>
-                    <button class="btn btn-primary" id="add-project" type="button">
+                    <a class="btn btn-primary" href="{{ route('builder.projects.create') }}">
                         {!! \App\Support\Icon::svg('plus') !!} Add Project
-                    </button>
+                    </a>
                     <a class="icon-btn" href="{{ route('builder.notifications') }}" aria-label="Notifications">
                         {!! \App\Support\Icon::svg('bell') !!}
                         <span class="badge-count">3</span>

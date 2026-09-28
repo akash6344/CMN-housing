@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/projects', [DashboardController::class, 'projects'])->name('builder.projects');
+Route::get('/projects/new', [DashboardController::class, 'postProject'])->name('builder.projects.create');
+Route::get('/projects/preview', [DashboardController::class, 'projectPreview'])->name('builder.projects.preview');
 Route::get('/leads', [DashboardController::class, 'leads'])->name('builder.leads');
 Route::get('/listings', [DashboardController::class, 'listings'])->name('builder.listings');
 Route::get('/ads', [DashboardController::class, 'ads'])->name('builder.ads');

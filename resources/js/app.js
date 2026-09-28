@@ -49,6 +49,15 @@ function openCounterModal(id) {
 }
 
 document.addEventListener('click', (e) => {
+    const wizardSubmit = e.target.closest('[data-wizard-submit]');
+    if (wizardSubmit) {
+        const confirmBox = document.getElementById('confirm-submit');
+        if (confirmBox && !confirmBox.checked) {
+            toast('Please confirm Terms & Conditions first');
+            return;
+        }
+    }
+
     const toastBtn = e.target.closest('[data-toast]');
     if (toastBtn) toast(toastBtn.dataset.toast);
 
@@ -67,11 +76,66 @@ document.addEventListener('click', (e) => {
     if (e.target.closest('#menu-toggle')) document.body.classList.toggle('sidebar-open');
     if (e.target.id === 'overlay') closeSidebar();
 
+    const wizardNext = e.target.closest('[data-wizard-next]');
+    if (wizardNext) {
+        const wizard = wizardNext.closest('[data-project-wizard]');
+        if (wizard) setWizardStep(wizard, Number(wizard.dataset.currentStep || 1) + 1);
+    }
+
+    const wizardPrev = e.target.closest('[data-wizard-prev]');
+    if (wizardPrev) {
+        const wizard = wizardPrev.closest('[data-project-wizard]');
+        if (wizard) setWizardStep(wizard, Number(wizard.dataset.currentStep || 1) - 1);
+    }
+
+    const gotoStep = e.target.closest('[data-goto-step]');
+    if (gotoStep) {
+        const wizard = document.querySelector('[data-project-wizard]');
+        if (wizard) setWizardStep(wizard, Number(gotoStep.dataset.gotoStep));
+    }
+
     const filterTab = e.target.closest('[data-filter-tab]');
     if (filterTab) {
         const group = filterTab.closest('[data-filter-group]');
         group.querySelectorAll('[data-filter-tab]').forEach((tab) => tab.classList.remove('is-active'));
         filterTab.classList.add('is-active');
+    }
+
+    const ppageTab = e.target.closest('[data-ppage-tab]');
+    if (ppageTab) {
+        const tabs = ppageTab.closest('.ppage-tabs');
+        tabs.querySelectorAll('[data-ppage-tab]').forEach((tab) => tab.classList.remove('is-active'));
+        ppageTab.classList.add('is-active');
+    }
+
+    const bhkTab = e.target.closest('[data-bhk-tab]');
+    if (bhkTab) {
+        const preview = bhkTab.closest('[data-project-preview]');
+        const index = bhkTab.dataset.bhkTab;
+        preview.querySelectorAll('[data-bhk-tab]').forEach((tab) => tab.classList.remove('is-active'));
+        bhkTab.classList.add('is-active');
+        preview.querySelectorAll('[data-bhk-panel]').forEach((panel) => {
+            panel.hidden = panel.dataset.bhkPanel !== index;
+        });
+    }
+
+    const sizeCard = e.target.closest('[data-size-card]');
+    if (sizeCard) {
+        const row = sizeCard.closest('.ppage-sizes');
+        row.querySelectorAll('[data-size-card]').forEach((card) => card.classList.remove('is-active'));
+        sizeCard.classList.add('is-active');
+    }
+
+    const planBtn = e.target.closest('[data-plan-view]');
+    if (planBtn) {
+        const wrap = planBtn.closest('.ppage-plan');
+        wrap.querySelectorAll('[data-plan-view]').forEach((btn) => btn.classList.remove('is-active'));
+        planBtn.classList.add('is-active');
+        const visual = wrap.querySelector('[data-plan-visual]');
+        if (visual) {
+            visual.classList.toggle('is-2d', planBtn.dataset.planView === '2d');
+            visual.classList.toggle('is-3d', planBtn.dataset.planView === '3d');
+        }
     }
 
     const viewBtn = e.target.closest('[data-view]');
@@ -185,6 +249,69 @@ const listingProject = document.querySelector('[data-listing-project]');
 if (listingProject) {
     listingProject.addEventListener('change', filterListings);
 }
+
+function setWizardStep(wizard, step) {
+    const max = wizard.querySelectorAll('[data-wizard-panel]').length;
+    const next = Math.min(Math.max(step, 1), max);
+    wizard.dataset.currentStep = String(next);
+
+    wizard.querySelectorAll('[data-wizard-panel]').forEach((panel) => {
+        const match = Number(panel.dataset.wizardPanel) === next;
+        panel.hidden = !match;
+        panel.classList.toggle('is-active', match);
+    });
+
+    wizard.querySelectorAll('[data-wizard-stepper] [data-goto-step]').forEach((btn) => {
+        const id = Number(btn.dataset.gotoStep);
+        btn.classList.toggle('is-active', id === next);
+        btn.classList.toggle('is-done', id < next);
+        const index = btn.querySelector('[data-step-index]');
+        if (index) index.textContent = id < next ? '✓' : String(id);
+    });
+
+    const prevBtn = wizard.querySelector('[data-wizard-prev]');
+    const nextBtn = wizard.querySelector('[data-wizard-next]');
+    const submitBtn = wizard.querySelector('.wizard-footer [data-wizard-submit]');
+    const readyCard = wizard.querySelector('[data-ready-card]');
+    const previewCard = wizard.querySelector('[data-preview-card]');
+    const cancelBtn = wizard.querySelector('.wizard-footer-right .btn-ghost');
+
+    if (prevBtn) prevBtn.hidden = next === 1;
+    if (nextBtn) nextBtn.hidden = next === max;
+    if (submitBtn) submitBtn.hidden = next !== max;
+    if (readyCard) readyCard.hidden = next !== max;
+    if (previewCard) previewCard.hidden = next === 1;
+    if (cancelBtn) cancelBtn.hidden = next !== 1;
+
+    const nextLabels = {
+        1: 'Next: Units & Pricing',
+        2: 'Next: Amenities',
+        3: 'Next: Media & Plans',
+        4: 'Next: Review & Submit',
+    };
+    if (nextBtn && nextLabels[next]) {
+        nextBtn.innerHTML = `${nextLabels[next]} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
+    }
+
+    const titles = {
+        1: 'List your project and reach thousands of verified buyers on CMNHousing.',
+        2: 'Add unit configurations, pricing and floor plans for your project.',
+        3: 'Select amenities and features available in your project.',
+        4: 'Upload images, floor plans, documents and video.',
+        5: 'Review all details before submitting. You can go back and edit any section.',
+    };
+    const sub = document.querySelector('.topbar-title p');
+    if (sub && titles[next]) sub.textContent = titles[next];
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.addEventListener('change', (e) => {
+    const amenity = e.target.closest('.amenity-item input[type="checkbox"]');
+    if (amenity) {
+        amenity.closest('.amenity-item')?.classList.toggle('is-checked', amenity.checked);
+    }
+});
 
 const search = document.getElementById('global-search');
 if (search) {

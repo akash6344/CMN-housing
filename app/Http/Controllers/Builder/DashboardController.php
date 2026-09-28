@@ -107,6 +107,26 @@ class DashboardController extends Controller
         ]));
     }
 
+    public function postProject(): View
+    {
+        $data = DemoDashboardData::postProject();
+
+        return view('builder.post-project', array_merge($data, [
+            'pageTitle' => 'Post New Project',
+            'pageSub' => 'List your project and reach thousands of verified buyers on CMNHousing.',
+            'active' => 'projects',
+        ]));
+    }
+
+    public function projectPreview(): View
+    {
+        $data = DemoDashboardData::projectPreview();
+
+        return view('site.project-preview', array_merge($data, [
+            'pageTitle' => $data['project']['name'],
+        ]));
+    }
+
     public function comingSoon(string $page): View
     {
         $data = DemoDashboardData::shell();
