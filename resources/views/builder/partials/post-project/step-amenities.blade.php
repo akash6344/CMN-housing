@@ -11,7 +11,7 @@
         <div class="amenity-grid">
             @foreach ($amenitiesList as $amenity)
                 <label class="amenity-item {{ !empty($amenity['checked']) ? 'is-checked' : '' }}">
-                    <input type="checkbox" {{ !empty($amenity['checked']) ? 'checked' : '' }}>
+                    <input type="checkbox" value="{{ $amenity['label'] }}" {{ !empty($amenity['checked']) ? 'checked' : '' }}>
                     <span>{{ $amenity['label'] }}</span>
                 </label>
             @endforeach

@@ -13,6 +13,99 @@ function closeSidebar() {
     document.body.classList.remove('sidebar-open');
 }
 
+function getCsrfToken() {
+    return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+}
+
+async function postWizardStep(url, payload) {
+    const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': getCsrfToken(),
+        },
+        body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+        const errorMsg = data.message || (data.errors ? Object.values(data.errors).flat().join(', ') : 'Error saving step');
+        throw new Error(errorMsg);
+    }
+    return data;
+}
+
+function collectStep1Data(wizard) {
+    return {
+        project_id: wizard.dataset.projectId ? Number(wizard.dataset.projectId) : null,
+        name: document.getElementById('project-name')?.value.trim() || '',
+        tagline: document.getElementById('project-tagline')?.value.trim() || '',
+        builder_name: document.getElementById('builder-name')?.value.trim() || '',
+        location: document.getElementById('project-location')?.value.trim() || '',
+        maps_link: document.getElementById('maps-link')?.value.trim() || '',
+        project_type: document.getElementById('project-type')?.value || '',
+        project_status: document.getElementById('project-status')?.value || '',
+        possession_date: document.getElementById('possession')?.value || null,
+        rera_number: document.getElementById('rera-no')?.value.trim() || '',
+        towers: document.getElementById('towers')?.value ? Number(document.getElementById('towers')?.value) : null,
+        total_units: document.getElementById('total-units')?.value ? Number(document.getElementById('total-units')?.value) : null,
+        land_area: document.getElementById('land-area')?.value.trim() || '',
+    };
+}
+
+function collectStep2Data(wizard) {
+    const cards = wizard.querySelectorAll('[data-unit-card]');
+    const units = [];
+    cards.forEach((card) => {
+        const unitType = card.querySelector('[data-unit-field="unit_type"]')?.value.trim() || '';
+        const builtUp = card.querySelector('[data-unit-field="built_up_area"]')?.value || '';
+        const carpet = card.querySelector('[data-unit-field="carpet_area"]')?.value || '';
+        const price = card.querySelector('[data-unit-field="price"]')?.value || '';
+        const floorRange = card.querySelector('[data-unit-field="floor_range"]')?.value || 'All Floors';
+        const available = card.querySelector('[data-unit-field="available_units"]')?.value || '1';
+        const showPlan = card.querySelector('[data-unit-field="show_floor_plan"]')?.checked || false;
+
+        if (unitType || builtUp || price) {
+            units.push({
+                unit_type: unitType,
+                built_up_area: Number(builtUp) || 0,
+                carpet_area: Number(carpet) || Number(builtUp) || 0,
+                price: Number(price) || 0,
+                floor_range: floorRange,
+                available_units: Number(available) || 1,
+                show_floor_plan: showPlan,
+            });
+        }
+    });
+
+    const minPrice = document.getElementById('bargain-min')?.value;
+    const targetPrice = document.getElementById('bargain-target')?.value;
+    const maxPrice = document.getElementById('bargain-max')?.value;
+
+    return {
+        project_id: wizard.dataset.projectId ? Number(wizard.dataset.projectId) : null,
+        smart_bargain_enabled: true,
+        min_expected_price: minPrice ? Number(minPrice) : null,
+        target_price: targetPrice ? Number(targetPrice) : null,
+        max_price: maxPrice ? Number(maxPrice) : null,
+        units: units,
+    };
+}
+
+function collectStep3Data(wizard) {
+    const amenities = [];
+    wizard.querySelectorAll('.amenity-grid input[type="checkbox"]:checked').forEach((chk) => {
+        if (chk.value) amenities.push(chk.value);
+    });
+    const otherAmenity = document.getElementById('other-amenity')?.value.trim() || '';
+
+    return {
+        project_id: wizard.dataset.projectId ? Number(wizard.dataset.projectId) : null,
+        amenities: amenities,
+        other_amenity: otherAmenity,
+    };
+}
+
 function openProjectModal() {
     const modalEl = document.getElementById('modal');
     if (!modalEl) return;
@@ -79,7 +172,88 @@ document.addEventListener('click', (e) => {
     const wizardNext = e.target.closest('[data-wizard-next]');
     if (wizardNext) {
         const wizard = wizardNext.closest('[data-project-wizard]');
-        if (wizard) setWizardStep(wizard, Number(wizard.dataset.currentStep || 1) + 1);
+        if (!wizard) return;
+        const currentStep = Number(wizard.dataset.currentStep || 1);
+
+        if (currentStep === 1) {
+            const data = collectStep1Data(wizard);
+            if (!data.name || !data.builder_name || !data.location || !data.project_type || !data.project_status) {
+                toast('Please fill all required project fields (*) in Step 1');
+                return;
+            }
+            wizardNext.disabled = true;
+            postWizardStep('/builder/projects/wizard/basic', data)
+                .then((res) => {
+                    wizard.dataset.projectId = res.project_id;
+                    toast(res.message || 'Basic details saved');
+                    setWizardStep(wizard, 2);
+                })
+                .catch((err) => toast(err.message))
+                .finally(() => { wizardNext.disabled = false; });
+            return;
+        }
+
+        if (currentStep === 2) {
+            const data = collectStep2Data(wizard);
+            if (!wizard.dataset.projectId) {
+                toast('Please complete Step 1 first');
+                setWizardStep(wizard, 1);
+                return;
+            }
+            wizardNext.disabled = true;
+            postWizardStep('/builder/projects/wizard/units', data)
+                .then((res) => {
+                    toast(res.message || 'Units & pricing saved');
+                    setWizardStep(wizard, 3);
+                })
+                .catch((err) => toast(err.message))
+                .finally(() => { wizardNext.disabled = false; });
+            return;
+        }
+
+        if (currentStep === 3) {
+            const data = collectStep3Data(wizard);
+            if (!wizard.dataset.projectId) {
+                toast('Please complete Step 1 first');
+                setWizardStep(wizard, 1);
+                return;
+            }
+            wizardNext.disabled = true;
+            postWizardStep('/builder/projects/wizard/amenities', data)
+                .then((res) => {
+                    toast(res.message || 'Amenities saved');
+                    setWizardStep(wizard, 4);
+                })
+                .catch((err) => toast(err.message))
+                .finally(() => { wizardNext.disabled = false; });
+            return;
+        }
+
+        setWizardStep(wizard, currentStep + 1);
+    }
+
+    const saveDraftBtn = e.target.closest('[data-wizard-save-draft]');
+    if (saveDraftBtn) {
+        const wizard = document.querySelector('[data-project-wizard]');
+        if (wizard) {
+            const step1 = collectStep1Data(wizard);
+            const step2 = collectStep2Data(wizard);
+            const step3 = collectStep3Data(wizard);
+            const draftPayload = {
+                ...step1,
+                ...step2,
+                ...step3,
+                project_id: wizard.dataset.projectId ? Number(wizard.dataset.projectId) : null,
+            };
+            saveDraftBtn.disabled = true;
+            postWizardStep('/builder/projects/wizard/draft', draftPayload)
+                .then((res) => {
+                    wizard.dataset.projectId = res.project_id;
+                    toast(res.message || 'Draft saved successfully');
+                })
+                .catch((err) => toast(err.message))
+                .finally(() => { saveDraftBtn.disabled = false; });
+        }
     }
 
     const wizardPrev = e.target.closest('[data-wizard-prev]');
@@ -92,6 +266,41 @@ document.addEventListener('click', (e) => {
     if (gotoStep) {
         const wizard = document.querySelector('[data-project-wizard]');
         if (wizard) setWizardStep(wizard, Number(gotoStep.dataset.gotoStep));
+    }
+
+    const addUnit = e.target.closest('[data-add-unit]');
+    if (addUnit) {
+        const container = document.querySelector('[data-unit-cards]');
+        const firstCard = container?.querySelector('[data-unit-card]');
+        if (container && firstCard) {
+            const clone = firstCard.cloneNode(true);
+            clone.querySelectorAll('input').forEach((inp) => {
+                if (inp.type === 'checkbox') inp.checked = false;
+                else inp.value = '';
+            });
+            clone.querySelectorAll('select').forEach((sel) => sel.selectedIndex = 0);
+            container.appendChild(clone);
+            toast('New unit type added');
+        }
+    }
+
+    const removeUnit = e.target.closest('[data-remove-unit]');
+    if (removeUnit) {
+        const card = removeUnit.closest('[data-unit-card]');
+        const container = document.querySelector('[data-unit-cards]');
+        if (card && container) {
+            if (container.querySelectorAll('[data-unit-card]').length > 1) {
+                card.remove();
+                toast('Unit removed');
+            } else {
+                card.querySelectorAll('input').forEach((inp) => {
+                    if (inp.type === 'checkbox') inp.checked = false;
+                    else inp.value = '';
+                });
+                card.querySelectorAll('select').forEach((sel) => sel.selectedIndex = 0);
+                toast('Unit cleared');
+            }
+        }
     }
 
     const filterTab = e.target.closest('[data-filter-tab]');
@@ -311,6 +520,22 @@ document.addEventListener('change', (e) => {
     if (amenity) {
         amenity.closest('.amenity-item')?.classList.toggle('is-checked', amenity.checked);
     }
+
+    if (e.target.id === 'project-status') {
+        const previewStatus = document.querySelector('[data-preview-status]');
+        if (previewStatus) previewStatus.textContent = e.target.value || 'Draft';
+    }
+});
+
+document.addEventListener('input', (e) => {
+    if (e.target.id === 'project-name') {
+        const previewName = document.querySelector('[data-preview-name]');
+        if (previewName) previewName.textContent = e.target.value || 'Project Name';
+    }
+    if (e.target.id === 'project-location') {
+        const previewLoc = document.querySelector('[data-preview-location]');
+        if (previewLoc) previewLoc.textContent = e.target.value || 'Location';
+    }
 });
 
 const search = document.getElementById('global-search');
@@ -319,3 +544,4 @@ if (search) {
         if (e.key === 'Enter') toast(`Search: ${e.target.value || 'all records'}`);
     });
 }
+

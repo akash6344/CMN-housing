@@ -2,7 +2,7 @@
     <button type="button" class="btn btn-outline" data-wizard-prev hidden>
         {!! \App\Support\Icon::svg('arrowLeft') !!} Previous
     </button>
-    <button type="button" class="btn btn-outline" data-toast="Draft saved">
+    <button type="button" class="btn btn-outline" data-wizard-save-draft>
         {!! \App\Support\Icon::svg('save') !!} Save as Draft
     </button>
     <div class="wizard-footer-right">

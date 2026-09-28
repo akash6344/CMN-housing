@@ -25,16 +25,9 @@
         </div>
 
         <div class="media-thumbs">
-            @for ($i = 1; $i <= 4; $i++)
-                <div class="media-thumb">
-                    <button type="button" class="media-thumb-remove" aria-label="Remove" data-toast="Image removed">
-                        {!! \App\Support\Icon::svg('x') !!}
-                    </button>
-                </div>
-            @endfor
-            <button type="button" class="media-thumb media-thumb-add" data-toast="Add more images">
+            <button type="button" class="media-thumb media-thumb-add" data-toast="Upload images">
                 {!! \App\Support\Icon::svg('plus') !!}
-                <span>Add More</span>
+                <span>Upload Images</span>
             </button>
         </div>
     </article>
@@ -49,35 +42,9 @@
             <button type="button" class="btn btn-outline btn-sm" data-toast="Add floor plan">+ Add Floor Plan</button>
         </div>
 
-        <div class="status-tabs floor-plan-tabs" data-filter-group="floor-plans">
-            <button type="button" class="status-tab is-active" data-filter-tab>2 BHK (2)</button>
-            <button type="button" class="status-tab" data-filter-tab>3 BHK (2)</button>
-            <button type="button" class="status-tab" data-filter-tab>4 BHK (0)</button>
-        </div>
-
-        <div class="floor-plan-cards">
-            <div class="card floor-plan-card">
-                <div class="floor-plan-preview is-2d"></div>
-                <div>
-                    <strong>2D Floor Plan</strong>
-                    <p>3 BHK - 1380 Sq.Ft</p>
-                    <div class="unit-plan-actions">
-                        <button type="button" class="btn btn-outline btn-sm" data-toast="Replace plan">Replace</button>
-                        <button type="button" class="btn btn-outline btn-sm" data-toast="View plan">View</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card floor-plan-card">
-                <div class="floor-plan-preview is-3d"></div>
-                <div>
-                    <strong>3D Floor Plan</strong>
-                    <p>3 BHK - 1380 Sq.Ft</p>
-                    <div class="unit-plan-actions">
-                        <button type="button" class="btn btn-outline btn-sm" data-toast="Replace plan">Replace</button>
-                        <button type="button" class="btn btn-outline btn-sm" data-toast="View plan">View</button>
-                    </div>
-                </div>
-            </div>
+        <div class="card" style="padding: 28px; text-align: center; color: var(--text-muted, #64748b); border: 1px dashed var(--border-color, #e2e8f0); border-radius: 8px;">
+            <p style="margin-bottom: 6px; font-weight: 500;">No floor plans uploaded yet</p>
+            <p style="font-size: 0.85rem;">Click the "+ Add Floor Plan" button above to upload 2D or 3D floor plans for your unit configurations.</p>
         </div>
     </article>
 
@@ -105,8 +72,8 @@
         @include('builder.partials.form-field', [
             'id' => 'project-video',
             'label' => 'Project Video (YouTube or Vimeo Link)',
-            'value' => 'https://youtube.com/watch?v=example',
-            'placeholder' => 'Paste video URL',
+            'value' => $mediaSummary['video'] ?? '',
+            'placeholder' => 'Paste YouTube / Vimeo video URL',
         ])
 
         @include('builder.partials.form-field', [
@@ -116,9 +83,9 @@
         ])
 
         <div class="media-prefs">
-            <label class="wizard-check"><input type="checkbox" checked> <span>Show photos in gallery</span></label>
-            <label class="wizard-check"><input type="checkbox" checked> <span>Enable 2D/3D floor plans on listing page</span></label>
-            <label class="wizard-check"><input type="checkbox" checked> <span>Show video / virtual tour</span></label>
+            <label class="wizard-check"><input type="checkbox"> <span>Show photos in gallery</span></label>
+            <label class="wizard-check"><input type="checkbox"> <span>Enable 2D/3D floor plans on listing page</span></label>
+            <label class="wizard-check"><input type="checkbox"> <span>Show video / virtual tour</span></label>
         </div>
     </article>
 </section>
