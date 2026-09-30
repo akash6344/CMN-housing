@@ -1,7 +1,7 @@
 @extends('layouts.builder')
 
 @section('content')
-    <div class="wizard-page" data-project-wizard data-current-step="1">
+    <div class="wizard-page" data-project-wizard data-current-step="1" data-project-id="{{ $projectId ?? '' }}">
         <div class="wizard-top">
             <a class="wizard-back" href="{{ route('dashboard') }}">
                 {!! \App\Support\Icon::svg('arrowLeft') !!} Back to Dashboard

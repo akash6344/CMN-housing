@@ -45,6 +45,15 @@
             @include('builder.partials.form-field', ['id' => 'towers', 'label' => 'No. of Towers', 'value' => $projectForm['towers'] ?? '', 'placeholder' => 'e.g. 5'])
             @include('builder.partials.form-field', ['id' => 'total-units', 'label' => 'Total Units', 'value' => $projectForm['totalUnits'] ?? '', 'placeholder' => 'e.g. 250'])
             @include('builder.partials.form-field', ['id' => 'land-area', 'label' => 'Land Area', 'value' => $projectForm['landArea'] ?? '', 'placeholder' => 'e.g. 10 Acres', 'class' => 'span-2'])
+
+            <div class="field span-2">
+                <label for="project-description">Project Description</label>
+                <textarea id="project-description" rows="3" placeholder="Provide a brief overview of the project, architecture, location benefits, etc.">{{ $projectForm['description'] ?? '' }}</textarea>
+            </div>
+            <div class="field span-2">
+                <label for="project-highlights">Key Highlights (Comma-separated)</label>
+                <input id="project-highlights" type="text" value="{{ !empty($highlights) ? implode(', ', $highlights) : '' }}" placeholder="e.g. 5 mins from Metro, 70% Open Space, Premium Clubhouse">
+            </div>
         </div>
     </article>
 </section>

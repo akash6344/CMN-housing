@@ -4,14 +4,20 @@ namespace App\Http\Controllers\Builder;
 
 use App\Http\Controllers\Controller;
 use App\Models\ProjectDetail;
+use App\Models\ProjectDocument;
+use App\Models\ProjectMedia;
 use App\Models\UnitConfiguration;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProjectWizardController extends Controller
 {
+    /**
+     * Step 1: Save or update basic project details.
+     */
     public function saveBasicDetails(Request $request): JsonResponse
     {
         $validated = $request->validate([
@@ -28,6 +34,9 @@ class ProjectWizardController extends Controller
             'towers'         => ['nullable', 'integer', 'min:0'],
             'total_units'    => ['nullable', 'integer', 'min:0'],
             'land_area'      => ['nullable', 'string', 'max:100'],
+            'description'    => ['nullable', 'string'],
+            'highlights'     => ['nullable', 'array'],
+            'highlights.*'   => ['string', 'max:255'],
         ]);
 
         $projectId = $validated['project_id'] ?? null;
@@ -181,7 +190,241 @@ class ProjectWizardController extends Controller
     }
 
     /**
-     * Save draft at any stage (supports partial data from Step 1, 2, or 3).
+     * Step 4: Save media, videos, floor plans, and preferences into normalized ProjectMedia & ProjectDocument.
+     */
+    public function saveMedia(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'project_id'        => ['required', 'integer', 'exists:project_details,id'],
+            'video_url'         => ['nullable', 'string', 'max:1000'],
+            'virtual_tour_url'  => ['nullable', 'string', 'max:1000'],
+            'media_photos'      => ['nullable', 'array'],
+            'floor_plans'       => ['nullable', 'array'],
+            'documents'         => ['nullable', 'array'],
+            'media_preferences' => ['nullable', 'array'],
+        ]);
+
+        $project = ProjectDetail::findOrFail($validated['project_id']);
+
+        DB::transaction(function () use ($project, $validated) {
+            // Save video URL to normalized project_media
+            if (!empty($validated['video_url'])) {
+                $project->media()->updateOrCreate(
+                    ['category' => 'video'],
+                    [
+                        'title'     => 'Project Video',
+                        'file_url'  => trim($validated['video_url']),
+                        'file_name' => 'Project Video',
+                    ]
+                );
+            }
+
+            // Save virtual tour URL to normalized project_media
+            if (!empty($validated['virtual_tour_url'])) {
+                $project->media()->updateOrCreate(
+                    ['category' => 'virtual_tour'],
+                    [
+                        'title'     => 'Virtual Tour',
+                        'file_url'  => trim($validated['virtual_tour_url']),
+                        'file_name' => 'Virtual Tour',
+                    ]
+                );
+            }
+
+            // Sync photos into project_media if provided
+            if (isset($validated['media_photos']) && is_array($validated['media_photos'])) {
+                foreach ($validated['media_photos'] as $idx => $photoData) {
+                    $url = is_array($photoData) ? ($photoData['url'] ?? '') : $photoData;
+                    if (empty($url)) continue;
+
+                    $project->media()->updateOrCreate(
+                        [
+                            'file_url' => $url,
+                        ],
+                        [
+                            'category'   => is_array($photoData) ? ($photoData['category'] ?? 'photos') : 'photos',
+                            'title'      => is_array($photoData) ? ($photoData['name'] ?? 'Project Photo') : 'Project Photo',
+                            'file_name'  => is_array($photoData) ? ($photoData['name'] ?? null) : null,
+                            'file_path'  => is_array($photoData) ? ($photoData['path'] ?? null) : null,
+                            'file_size'  => is_array($photoData) ? ($photoData['size'] ?? null) : null,
+                            'is_cover'   => $idx === 0,
+                            'sort_order' => $idx,
+                        ]
+                    );
+                }
+            }
+
+            // Sync floor plans into project_media if provided
+            if (isset($validated['floor_plans']) && is_array($validated['floor_plans'])) {
+                foreach ($validated['floor_plans'] as $idx => $planData) {
+                    $url = is_array($planData) ? ($planData['url'] ?? '') : $planData;
+                    if (empty($url)) continue;
+
+                    $project->media()->updateOrCreate(
+                        ['file_url' => $url],
+                        [
+                            'category'   => 'floor_plans',
+                            'title'      => is_array($planData) ? ($planData['name'] ?? 'Floor Plan') : 'Floor Plan',
+                            'file_name'  => is_array($planData) ? ($planData['name'] ?? null) : null,
+                            'file_path'  => is_array($planData) ? ($planData['path'] ?? null) : null,
+                            'file_size'  => is_array($planData) ? ($planData['size'] ?? null) : null,
+                            'sort_order' => $idx,
+                        ]
+                    );
+                }
+            }
+
+            // Sync documents into project_documents if provided
+            if (isset($validated['documents']) && is_array($validated['documents'])) {
+                foreach ($validated['documents'] as $docData) {
+                    $url = is_array($docData) ? ($docData['url'] ?? '') : $docData;
+                    if (empty($url)) continue;
+
+                    $cat = is_array($docData) ? ($docData['category'] ?? 'other') : 'other';
+                    $title = is_array($docData) ? ($docData['name'] ?? ucfirst($cat)) : ucfirst($cat);
+
+                    $project->documents()->updateOrCreate(
+                        ['file_url' => $url],
+                        [
+                            'category'  => $cat,
+                            'title'     => $title,
+                            'file_name' => is_array($docData) ? ($docData['name'] ?? null) : null,
+                            'file_path' => is_array($docData) ? ($docData['path'] ?? null) : null,
+                            'file_size' => is_array($docData) ? ($docData['size'] ?? null) : null,
+                            'status'    => 'pending',
+                        ]
+                    );
+                }
+            }
+        });
+
+        return response()->json([
+            'success'    => true,
+            'message'    => 'Media and documents saved successfully.',
+            'project_id' => $project->id,
+            'media'      => $project->media()->get(),
+            'documents'  => $project->documents()->get(),
+        ]);
+    }
+
+    /**
+     * Upload an individual image, floor plan, or PDF document into normalized models.
+     */
+    public function uploadMediaFile(Request $request): JsonResponse
+    {
+        $request->validate([
+            'file'       => ['required', 'file', 'max:20480'], // max 20MB
+            'category'   => ['nullable', 'string', 'in:photos,floor_plans,brochure,price_list,rera,documents,approval,agreement,other'],
+            'project_id' => ['nullable', 'integer', 'exists:project_details,id'],
+        ]);
+
+        $file = $request->file('file');
+        $category = $request->input('category', 'photos');
+        $projectId = $request->input('project_id');
+
+        $ext = strtolower($file->getClientOriginalExtension());
+        $mime = $file->getMimeType();
+        $isImage = str_starts_with($mime, 'image/') || in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'gif']);
+        $isDoc = in_array($ext, ['pdf', 'doc', 'docx']);
+
+        if (!$isImage && !$isDoc) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid file type. Allowed: JPG, PNG, WEBP, PDF, DOC.',
+            ], 422);
+        }
+
+        $folder = $projectId ? "projects/{$projectId}/{$category}" : "projects/temp/{$category}";
+        $filename = Str::random(16) . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $ext;
+        $path = $file->storeAs($folder, $filename, 'public');
+        $url = Storage::url($path);
+
+        $fileRecord = [
+            'name'      => $file->getClientOriginalName(),
+            'path'      => $path,
+            'url'       => $url,
+            'size'      => $file->getSize(),
+            'mime_type' => $mime,
+            'category'  => $category,
+            'is_image'  => $isImage,
+        ];
+
+        // Store into normalized models if project_id is available
+        if ($projectId) {
+            $project = ProjectDetail::find($projectId);
+            if ($project) {
+                if ($isDoc || in_array($category, ['brochure', 'price_list', 'rera', 'approval', 'agreement', 'documents'])) {
+                    $doc = $project->documents()->create([
+                        'category'  => $category === 'documents' ? 'other' : $category,
+                        'title'     => $file->getClientOriginalName(),
+                        'file_name' => $file->getClientOriginalName(),
+                        'file_path' => $path,
+                        'file_url'  => $url,
+                        'mime_type' => $mime,
+                        'file_size' => $file->getSize(),
+                        'status'    => 'pending',
+                    ]);
+                    $fileRecord['id'] = $doc->id;
+                    $fileRecord['model'] = 'ProjectDocument';
+                } else {
+                    $isCover = $project->media()->count() === 0;
+                    $media = $project->media()->create([
+                        'category'   => $category,
+                        'title'      => $file->getClientOriginalName(),
+                        'file_name'  => $file->getClientOriginalName(),
+                        'file_path'  => $path,
+                        'file_url'   => $url,
+                        'mime_type'  => $mime,
+                        'file_size'  => $file->getSize(),
+                        'is_cover'   => $isCover,
+                        'sort_order' => $project->media()->count(),
+                    ]);
+                    $fileRecord['id'] = $media->id;
+                    $fileRecord['model'] = 'ProjectMedia';
+                }
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'File uploaded successfully.',
+            'file'    => $fileRecord,
+        ]);
+    }
+
+    /**
+     * Step 5: Final Submission / Review publish.
+     */
+    public function submit(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'project_id'     => ['required', 'integer', 'exists:project_details,id'],
+            'terms_accepted' => ['required', 'boolean', 'accepted'],
+        ]);
+
+        $project = ProjectDetail::with(['unitConfigurations', 'media', 'documents'])->findOrFail($validated['project_id']);
+
+        if (empty($project->name) || empty($project->builder_name) || empty($project->location)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please complete all required project details before submitting.',
+            ], 422);
+        }
+
+        $project->submitForReview();
+
+        return response()->json([
+            'success'      => true,
+            'message'      => 'Congratulations! Your project has been submitted for review.',
+            'project_id'   => $project->id,
+            'status'       => $project->status,
+            'redirect_url' => route('builder.projects'),
+            'project'      => $project,
+        ]);
+    }
+
+    /**
+     * Save draft at any stage.
      */
     public function saveDraft(Request $request): JsonResponse
     {
@@ -205,6 +448,7 @@ class ProjectWizardController extends Controller
             'min_expected_price'    => $request->input('min_expected_price', $project->min_expected_price ?? null),
             'target_price'          => $request->input('target_price', $project->target_price ?? null),
             'max_price'             => $request->input('max_price', $project->max_price ?? null),
+            'description'           => $request->input('description', $project->description ?? null),
             'status'                => 'draft',
         ], fn ($val) => $val !== null);
 
@@ -217,7 +461,7 @@ class ProjectWizardController extends Controller
             $project->update($projectData);
         }
 
-        // If amenities are provided, update them
+        // Amenities
         if ($request->has('amenities')) {
             $amenities = (array) $request->input('amenities', []);
             if ($request->filled('other_amenity')) {
@@ -228,7 +472,15 @@ class ProjectWizardController extends Controller
             ]);
         }
 
-        // If units are provided, save them
+        // Highlights
+        if ($request->has('highlights')) {
+            $highlights = (array) $request->input('highlights', []);
+            $project->update([
+                'highlights' => array_values(array_unique(array_filter(array_map('trim', $highlights)))),
+            ]);
+        }
+
+        // Units
         if ($request->has('units') && is_array($request->input('units'))) {
             $units = $request->input('units');
             foreach ($units as $unitData) {
@@ -255,24 +507,40 @@ class ProjectWizardController extends Controller
             }
         }
 
+        // Video / Virtual Tour in normalized media
+        if ($request->filled('video_url')) {
+            $project->media()->updateOrCreate(
+                ['category' => 'video'],
+                ['file_url' => trim($request->input('video_url')), 'title' => 'Project Video', 'file_name' => 'Project Video']
+            );
+        }
+        if ($request->filled('virtual_tour_url')) {
+            $project->media()->updateOrCreate(
+                ['category' => 'virtual_tour'],
+                ['file_url' => trim($request->input('virtual_tour_url')), 'title' => 'Virtual Tour', 'file_name' => 'Virtual Tour']
+            );
+        }
+
         return response()->json([
             'success'    => true,
             'message'    => 'Project draft saved successfully.',
             'project_id' => $project->id,
-            'project'    => $project->load('unitConfigurations'),
+            'project'    => $project->load(['unitConfigurations', 'media', 'documents']),
         ]);
     }
 
     /**
-     * Fetch project details with unit configurations.
+     * Fetch project details with unit configurations, normalized media, and documents.
      */
     public function show(int $id): JsonResponse
     {
-        $project = ProjectDetail::with('unitConfigurations')->findOrFail($id);
+        $project = ProjectDetail::with(['unitConfigurations', 'media', 'documents'])->findOrFail($id);
 
         return response()->json([
-            'success' => true,
-            'project' => $project,
+            'success'   => true,
+            'project'   => $project,
+            'media'     => $project->media,
+            'documents' => $project->documents,
         ]);
     }
 }

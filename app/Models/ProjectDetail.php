@@ -37,7 +37,7 @@ class ProjectDetail extends Model
         // Step 3: Amenities
         'amenities',
 
-        // Additional
+        // Additional Metadata / Workflow
         'description',
         'highlights',
         'status',
@@ -72,6 +72,38 @@ class ProjectDetail extends Model
     }
 
     /**
+     * Normalized Media (photos, elevation, floor plans, video, virtual tours).
+     */
+    public function media(): HasMany
+    {
+        return $this->hasMany(ProjectMedia::class)->orderBy('sort_order')->orderBy('id');
+    }
+
+    /**
+     * Photos only (elevation, amenities, gallery).
+     */
+    public function photos(): HasMany
+    {
+        return $this->media()->whereIn('category', ['elevation', 'amenities', 'sample_flat', 'site_photo', 'gallery', 'photos', 'general']);
+    }
+
+    /**
+     * Floor plans only (2D and 3D).
+     */
+    public function floorPlans(): HasMany
+    {
+        return $this->media()->whereIn('category', ['floor_plan_2d', 'floor_plan_3d', 'floor_plans']);
+    }
+
+    /**
+     * Normalized Documents (brochures, price lists, RERA certificates, approvals).
+     */
+    public function documents(): HasMany
+    {
+        return $this->hasMany(ProjectDocument::class);
+    }
+
+    /**
      * Scope to only return published projects.
      */
     public function scopePublished($query)
@@ -88,11 +120,107 @@ class ProjectDetail extends Model
     }
 
     /**
+     * Scope to return projects under review.
+     */
+    public function scopeUnderReview($query)
+    {
+        return $query->where('status', 'under_review');
+    }
+
+    /**
      * Scope to filter by project type.
      */
     public function scopeOfType($query, string $type)
     {
         return $query->where('project_type', $type);
+    }
+
+    /**
+     * Mark project as submitted for review.
+     */
+    public function submitForReview(): static
+    {
+        $this->status = 'under_review';
+        $this->save();
+        return $this;
+    }
+
+    /**
+     * Publish the project.
+     */
+    public function publish(): static
+    {
+        $this->status = 'published';
+        $this->save();
+        return $this;
+    }
+
+    public function getIsUnderReviewAttribute(): bool
+    {
+        return $this->status === 'under_review';
+    }
+
+    public function getIsDraftAttribute(): bool
+    {
+        return $this->status === 'draft';
+    }
+
+    public function getIsPublishedAttribute(): bool
+    {
+        return $this->status === 'published';
+    }
+
+    /**
+     * Dynamic video URL from normalized media table.
+     */
+    public function getVideoUrlAttribute(): ?string
+    {
+        return $this->media()->where('category', 'video')->value('file_url');
+    }
+
+    /**
+     * Dynamic virtual tour URL from normalized media table.
+     */
+    public function getVirtualTourUrlAttribute(): ?string
+    {
+        return $this->media()->where('category', 'virtual_tour')->value('file_url');
+    }
+
+    /**
+     * Returns cover photo URL from normalized media.
+     */
+    public function getCoverPhotoAttribute(): ?string
+    {
+        return $this->media()->where('is_cover', true)->value('file_url')
+            ?? $this->photos()->first()?->file_url;
+    }
+
+    /**
+     * Total available units across all configurations.
+     */
+    public function getTotalAvailableUnitsCountAttribute(): int
+    {
+        return (int) $this->unitConfigurations()->sum('available_units');
+    }
+
+    public function getStatusLabelAttribute(): string
+    {
+        return match ($this->status) {
+            'under_review' => 'Pending Review',
+            'published'    => 'Active',
+            'archived'     => 'Archived',
+            default        => 'Draft',
+        };
+    }
+
+    public function getStatusClassAttribute(): string
+    {
+        return match ($this->status) {
+            'under_review' => 'chip-hold',
+            'published'    => 'chip-live',
+            'archived'     => 'chip-rejected',
+            default        => 'chip-counter',
+        };
     }
 
     /**

@@ -9,11 +9,12 @@
         </div>
 
         <div class="media-upload-row">
-            <div class="upload-dropzone" data-toast="Image upload coming soon">
+            <div class="upload-dropzone" id="media-dropzone" style="cursor: pointer;">
                 {!! \App\Support\Icon::svg('upload') !!}
                 <strong>Drag & drop images or click to upload</strong>
-                <span>JPG, PNG up to 10MB each</span>
-                <button type="button" class="btn btn-outline btn-sm">Upload Images</button>
+                <span>JPG, PNG, WEBP up to 10MB each</span>
+                <button type="button" class="btn btn-outline btn-sm" id="btn-browse-photos">Upload Images</button>
+                <input type="file" id="media-photos-input" accept="image/*" multiple style="display: none;">
             </div>
             <ul class="media-checklist">
                 <li>{!! \App\Support\Icon::svg('checkSimple') !!} Project Elevation</li>
@@ -24,8 +25,8 @@
             </ul>
         </div>
 
-        <div class="media-thumbs">
-            <button type="button" class="media-thumb media-thumb-add" data-toast="Upload images">
+        <div class="media-thumbs" id="media-thumbs-container">
+            <button type="button" class="media-thumb media-thumb-add" id="btn-add-more-photos">
                 {!! \App\Support\Icon::svg('plus') !!}
                 <span>Upload Images</span>
             </button>
@@ -39,12 +40,15 @@
                 <h2>Floor Plans</h2>
                 <p>Add 2D and 3D plans for each configuration.</p>
             </div>
-            <button type="button" class="btn btn-outline btn-sm" data-toast="Add floor plan">+ Add Floor Plan</button>
+            <button type="button" class="btn btn-outline btn-sm" id="btn-browse-plans">+ Add Floor Plan</button>
+            <input type="file" id="floor-plans-input" accept="image/*,.pdf" multiple style="display: none;">
         </div>
 
-        <div class="card" style="padding: 28px; text-align: center; color: var(--text-muted, #64748b); border: 1px dashed var(--border-color, #e2e8f0); border-radius: 8px;">
-            <p style="margin-bottom: 6px; font-weight: 500;">No floor plans uploaded yet</p>
-            <p style="font-size: 0.85rem;">Click the "+ Add Floor Plan" button above to upload 2D or 3D floor plans for your unit configurations.</p>
+        <div id="floor-plans-container">
+            <div class="card" id="empty-plans-notice" style="padding: 28px; text-align: center; color: var(--text-muted, #64748b); border: 1px dashed var(--border-color, #e2e8f0); border-radius: 8px;">
+                <p style="margin-bottom: 6px; font-weight: 500;">No floor plans uploaded yet</p>
+                <p style="font-size: 0.85rem;">Click the "+ Add Floor Plan" button above to upload 2D or 3D floor plans for your unit configurations.</p>
+            </div>
         </div>
     </article>
 
@@ -56,18 +60,21 @@
             </div>
         </div>
 
-        <div class="status-tabs" data-filter-group="doc-tabs">
-            <button type="button" class="status-tab is-active" data-filter-tab>Brochure</button>
-            <button type="button" class="status-tab" data-filter-tab>Price List</button>
-            <button type="button" class="status-tab" data-filter-tab>RERA Certificate</button>
-            <button type="button" class="status-tab" data-filter-tab>Other Documents</button>
+        <div class="status-tabs" data-filter-group="doc-tabs" id="doc-category-tabs">
+            <button type="button" class="status-tab is-active" data-doc-cat="brochure" data-filter-tab>Brochure</button>
+            <button type="button" class="status-tab" data-doc-cat="price_list" data-filter-tab>Price List</button>
+            <button type="button" class="status-tab" data-doc-cat="rera" data-filter-tab>RERA Certificate</button>
+            <button type="button" class="status-tab" data-doc-cat="documents" data-filter-tab>Other Documents</button>
         </div>
 
-        <div class="upload-dropzone upload-dropzone-sm" data-toast="PDF upload coming soon">
+        <div class="upload-dropzone upload-dropzone-sm" id="docs-dropzone" style="cursor: pointer;">
             {!! \App\Support\Icon::svg('file') !!}
-            <strong>Upload PDF</strong>
-            <span>Max 20 MB</span>
+            <strong>Upload Document (<span id="active-doc-cat-label">Brochure</span>)</strong>
+            <span>PDF, DOC, DOCX max 20 MB</span>
+            <input type="file" id="docs-file-input" accept=".pdf,.doc,.docx" style="display: none;">
         </div>
+
+        <div id="docs-list-container" style="display: flex; flex-direction: column; gap: 8px; margin-top: 12px;"></div>
 
         @include('builder.partials.form-field', [
             'id' => 'project-video',
@@ -83,9 +90,9 @@
         ])
 
         <div class="media-prefs">
-            <label class="wizard-check"><input type="checkbox"> <span>Show photos in gallery</span></label>
-            <label class="wizard-check"><input type="checkbox"> <span>Enable 2D/3D floor plans on listing page</span></label>
-            <label class="wizard-check"><input type="checkbox"> <span>Show video / virtual tour</span></label>
+            <label class="wizard-check"><input type="checkbox" id="pref-show-gallery" checked> <span>Show photos in gallery</span></label>
+            <label class="wizard-check"><input type="checkbox" id="pref-show-plans" checked> <span>Enable 2D/3D floor plans on listing page</span></label>
+            <label class="wizard-check"><input type="checkbox" id="pref-show-video" checked> <span>Show video / virtual tour</span></label>
         </div>
     </article>
 </section>

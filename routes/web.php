@@ -18,11 +18,14 @@ Route::get('/settings', [DashboardController::class, 'settings'])->name('builder
 
 Route::get('/bargain', fn () => app(DashboardController::class)->comingSoon('bargain'))->name('builder.bargain');
 
-// Wizard Save Endpoints (Step 1 Basic, Step 2 Units, Step 3 Amenities, Draft)
+// Wizard Save Endpoints (Step 1 Basic, Step 2 Units, Step 3 Amenities, Step 4 Media, Step 5 Submit, Upload, Draft, Show)
 Route::prefix('builder/projects/wizard')->name('builder.projects.wizard.')->group(function () {
     Route::post('/basic', [ProjectWizardController::class, 'saveBasicDetails'])->name('basic');
     Route::post('/units', [ProjectWizardController::class, 'saveUnits'])->name('units');
     Route::post('/amenities', [ProjectWizardController::class, 'saveAmenities'])->name('amenities');
+    Route::post('/media', [ProjectWizardController::class, 'saveMedia'])->name('media');
+    Route::post('/upload', [ProjectWizardController::class, 'uploadMediaFile'])->name('upload');
+    Route::post('/submit', [ProjectWizardController::class, 'submit'])->name('submit');
     Route::post('/draft', [ProjectWizardController::class, 'saveDraft'])->name('draft');
     Route::get('/{project}', [ProjectWizardController::class, 'show'])->name('show');
 });
